@@ -10,56 +10,56 @@ import ProtectedRoute from "./ui/ProtectedRoute.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 0
-    }
+    defaultOptions: {
+        queries: {
+            staleTime: 0
+        }
 
-  }
+    }
 });
 
 function App() {
 
-  return (<QueryClientProvider client={queryClient}>
-    <GlobalStyles />
-      <BrowserRouter>
-        <Routes>
-            <Route
-                element={
-                    <ProtectedRoute>
-                        <AppLayout />
-                    </ProtectedRoute>
-                }
-            >
-          <Route path="finance" element={<Finance />} />
-                <Route path="dashboard" element={<Dashboard />} />
+    return (<QueryClientProvider client={queryClient}>
+            <GlobalStyles/>
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        element={
+                            <ProtectedRoute>
+                                <AppLayout/>
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route path="finance" element={<Finance/>}/>
+                        <Route path="dashboard" element={<Dashboard/>}/>
 
-                <Route path="/" element={<Finance />} />
-            </Route>
-            <Route path="login" element={<Login />} />
-        </Routes>
+                        <Route path="/" element={<Finance/>}/>
+                    </Route>
+                    <Route path="login" element={<Login/>}/>
+                </Routes>
 
-      </BrowserRouter>
+            </BrowserRouter>
 
-        <Toaster position="top-center" gutter={12} containerStyle={{margin: '8px'}}
-                 toastOptions={{
-                   success: {
-                     duration: 3000
-                   },
-                   error: {
-                     duration: 5000
-                   },
-                   style: {
-                     fontSize: '16px',
-                     maxWidth: '500px',
-                     padding: '16px 24px',
-                     backgroundColor: "var(--color-grey-0)",
-                     color: "var(--color-grey-700)"
-                   }
-                 }}/>
+            <Toaster position="top-center" gutter={12} containerStyle={{margin: '8px'}}
+                     toastOptions={{
+                         success: {
+                             duration: 3000
+                         },
+                         error: {
+                             duration: 5000
+                         },
+                         style: {
+                             fontSize: '16px',
+                             maxWidth: '500px',
+                             padding: '16px 24px',
+                             backgroundColor: "var(--color-grey-0)",
+                             color: "var(--color-grey-700)"
+                         }
+                     }}/>
 
-      </QueryClientProvider>
-  )
+        </QueryClientProvider>
+    )
 }
 
 export default App

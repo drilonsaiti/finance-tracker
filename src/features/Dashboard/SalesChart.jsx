@@ -10,7 +10,7 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
-import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns";
+import {addMonths, eachDayOfInterval, format, isSameDay, isSameMonth, subDays, subMonths} from "date-fns";
 
 const StyledSalesChart = styled(DashboardBox)`
     grid-column: 1 / -1;
@@ -22,32 +22,37 @@ const StyledSalesChart = styled(DashboardBox)`
     }
 `;
 
-// Function to format Y-axis ticks in thousands (K)
 const formatYAxisTick = (tick) => {
     return `${tick / 1000}K`;
 };
 
 function SalesChart({ incomes, outcomes }) {
     const allDates = eachDayOfInterval({
-        start: subDays(new Date(), new Date().getDay() + 4),
-        end: new Date(),
+        start: subMonths(new Date(), 4),
+        end: addMonths(new Date(),1),
     });
 
-    const data = allDates.map((date) => {
+    const data = allDates.map((month) => {
         const incomeTotal = incomes
-            ?.filter((income) => isSameDay(date, new Date(income.date)))
+            ?.filter((income) => isSameMonth(month, new Date(income.date)))
             ?.reduce((acc, cur) => acc + Number(cur.amount), 0);
 
         const outcomeTotal = outcomes
-            ?.filter((outcome) => isSameDay(date, new Date(outcome.date)))
+            ?.filter((outcome) => isSameMonth(month, new Date(outcome.date)))
             ?.reduce((acc, cur) => acc + Number(cur.amount), 0);
 
         return {
-            label: format(date, "MMM dd"),
-            totalSales: incomeTotal,
-            extrasSales: outcomeTotal,
+            label: format(month, "MMM"),
+            totalSales: incomeTotal || 0,
+            extrasSales: outcomeTotal || 0,
         };
     });
+
+
+    const uniqueData = Array.from(new Set(data.map(item => item.label)))
+        .map(label => {
+            return data.find(item => item.label === label);
+        });
 
     const colors = {
         totalSales: { stroke: "#16a34a", fill: "#dcfce7" },
@@ -64,7 +69,7 @@ function SalesChart({ incomes, outcomes }) {
             </Heading>
 
             <ResponsiveContainer height={300} width="100%">
-                <AreaChart data={data}>
+                <AreaChart data={uniqueData}>
                     <XAxis
                         dataKey="label"
                         tick={{ fill: colors.text }}
